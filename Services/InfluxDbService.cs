@@ -8,10 +8,17 @@ public class InfluxDbService : IInfluxDbService
     public InfluxDbService(string connectionString)
     {
         _influxDbClient = new InfluxDBClient(connectionString);
+
+    }
+    public void Write(Action<WriteApi> action)
+    {
+        using var write = _influxDbClient.GetWriteApi();
+        action(write);
     }
 
-    public async Task InsertDataAsync(string measurement, IDictionary<string, object> fields)
+    public async Task<T> QueryAsync<T>(Func<QueryApi, Task<T>> action)
     {
-        // implementirati logiku za unos podataka 
+        var query = _influxDbClient.GetQueryApi();
+        return await action(query);
     }
 }

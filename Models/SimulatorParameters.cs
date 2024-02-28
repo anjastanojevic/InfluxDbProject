@@ -8,8 +8,6 @@ public class SimulatorParameters
 
     public static readonly double aqiBaseline = 50;
     public double AQIValue { get; set; }
-    public IFactor[]? Factors { get; set; }
-
 }
 
 

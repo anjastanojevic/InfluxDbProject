@@ -1,6 +1,7 @@
 using InfluxDB.Client.Api.Domain;
 
-interface ISimulatorService
+public interface ISimulatorService
 {
-    double GenerateAQIValue();
+    void SaveDataModel(string inputJsonString);
+    void GenerateData();
 }

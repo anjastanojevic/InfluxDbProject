@@ -1,0 +1,13 @@
+{
+    "DataModelName": "string",
+    "DataModelTag": "string",
+    "StartTime": "string",
+    "Fields": [
+        {
+            "FieldName": "string",
+            "DataType": "string",
+            "MinValue": "",
+            "MaxValue": ""
+        }
+    ]
+}

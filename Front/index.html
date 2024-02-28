@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Time Series Data Simulator</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='style.css'>
+    <script src='script.js'></script>
+</head>
+
+<body>
+    <h1>Create a Data Model</h1>
+    <form id="form-datamodel">
+        <table id="tbl">
+            <tr>
+                <td><label for="text-name">Name:</label></td>
+                <td><input type="text" id="text-datamodel-name" /></td>
+            </tr>
+            <tr>
+                <td><label for="text-datamodel-tag">Tag:</label></td>
+                <td><input type="text" id="text-datamodel-tag" /></td>
+            </tr>
+            <tr>
+                <td><label for="picker-starttime">Pick a starting time:</label></td>
+                <td><input type="datetime-local" id="picker-starttime" name="" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label>Fields:</label></td>
+            </tr>
+            <tbody class="field">
+                <tr>
+                    <td><label for="text-field-name-1">Name:</label></td>
+                    <td><input type="text" id="text-field-name-1" class="text-field-name" /></td>
+                </tr>
+                <tr>
+                    <td><label for="text-datatype-1">Type of Data:</label></td>
+                    <td><select id="text-datatype-1" class="slcFieldType">
+                            <option value="string">string</option>
+                            <option value="int">int</option>
+                            <option value="double">double</option>
+                            <option value="bool">bool</option>
+                        </select></td>
+                </tr>
+                <tr class="last">
+                    <td><label>Value Range:</label></td>
+                    <td>To: <input type="number" id="num-minvalue-1"> &emsp;
+                        From: <input type="number" id="num-maxvalue-1">
+                    </td>
+                </tr>
+            </tbody>
+            <tr>
+                <td></td>
+                <td>
+                    <button id="btn-addfield" type="button">Add a Field</button>
+                    <button id="btn-removefield" type="button">Remove Last Field</button>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button id="btn-savedata" type="button">Save Data Model</button><button id="btn-gendata" type="button">Generate Data</button></td>
+            </tr>
+        </table>
+    </form>
+
+</body>
+
+</html>

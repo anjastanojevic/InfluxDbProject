@@ -20,15 +20,15 @@ public class SimulatorController : ControllerBase
     {
         try
         {
-            _simulatorService.GenerateData();    
+            _simulatorService.GenerateData();
         }
         catch (System.Exception ex)
         {
             Console.WriteLine(ex.Message);
             return StatusCode(500); // internal server error code
         }
-        
-        
+
+
 
         return Ok();
     }
@@ -65,6 +65,44 @@ public class SimulatorController : ControllerBase
         catch (System.Exception)
         {
             return BadRequest(result);
+        }
+    }
+
+    [HttpPost]
+    [Route("insertData")]
+    public IActionResult InsertData([FromBody] object obj)
+    {
+        string measurement = "Proba2";
+        try
+        {
+            _influxDbService.InsertDataAsync(measurement, obj);
+        }
+        catch (System.Exception)
+        {
+            return StatusCode(500);
+            throw;
+        }
+
+        return Ok();
+    }
+
+    [HttpPost]
+    [Route("queryData")]
+    public async Task<IActionResult> QueryData([FromBody] string measurement)
+    {
+        if (string.IsNullOrEmpty(measurement))
+        {
+            return BadRequest("Measurement cannot be empty");
+        }
+
+        try
+        {
+            var result = await _influxDbService.QueryDataAsync(measurement);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error querying data: {ex.Message}");
         }
     }
 }

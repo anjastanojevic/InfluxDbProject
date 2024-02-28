@@ -1,5 +1,7 @@
 using System.Dynamic;
+using System.Formats.Tar;
 using InfluxDB.Client;
+using InfluxDB.Client.Api.Domain;
 using InfluxDB.Client.Core.Flux.Domain;
 using InfluxDB.Client.Writes;
 
@@ -26,22 +28,28 @@ public class InfluxDbService : IInfluxDbService
         {
             var point = PointData.Measurement(measurement);
             // point.Tag(dataModel.tag); TAG TREBA DA IMA TagName i TagValue
+            point.Tag("proba","probaTag");
 
             foreach (var field in dataModel.fields)
             {
                 point.Field(field.Key, field.Value);
+                point.Timestamp(DateTime.UtcNow, WritePrecision.Ns);
             }
 
             writeApi.WritePoint(point, _bucket, _org); // point -> bucket -> org su argumenti
         }
     }
 
-    public async Task<IEnumerable<FluxTable>> QueryDataAsync(string query)
+
+    public async Task<IEnumerable<FluxTable>> QueryDataAsync(string measurement)
     {
+        var query = $"from(bucket: \"newBucket\")"
+                  //+ $"|> range(start: -1h)" 
+                  + $"|> range(start: 0)"
+                  + $"|> filter(fn: (r) => r._measurement == \"{measurement}\")";
+
         var queryApi = _influxDbClient.GetQueryApi();
-
         var fluxTables = await queryApi.QueryAsync(query, _org);
-
         return fluxTables;
     }
 }

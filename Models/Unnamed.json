@@ -1,13 +1,13 @@
 {
-    "DataModelName": "string",
-    "DataModelTag": "string",
-    "StartTime": "string",
-    "Fields": [
+    "dataModelName": "model1",
+    "dataModelTag": "tag1",
+    "startTime": "1 sat",
+    "fields": [
         {
-            "FieldName": "string",
-            "DataType": "string",
-            "MinValue": "",
-            "MaxValue": ""
+            "fieldName": "field1",
+            "dataType": "int",
+            "minValue": "0",
+            "maxValue": "1"
         }
     ]
 }

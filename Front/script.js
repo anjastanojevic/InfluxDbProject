@@ -38,12 +38,12 @@ function addFieldBox() {
 
     const newNameLabel = document.createElement("label");
     newNameLabel.innerHTML = "Name:";
-    newNameLabel.for = `text-field-name-${boxesCnt - 1}`;
+    newNameLabel.for = `text-field-name-${boxesCnt}`;
     newTdLbl1.appendChild(newNameLabel);
 
     const newNameInput = document.createElement("input");
     newNameInput.type = "text";
-    newNameInput.id = `text-field-name-${boxesCnt - 1}`;
+    newNameInput.id = `text-field-name-${boxesCnt}`;
     newNameInput.className = "text-field-name";
     newTdInp.appendChild(newNameInput);
 
@@ -58,11 +58,11 @@ function addFieldBox() {
 
     const newTypeName = document.createElement("label");
     newTypeName.innerHTML = "Type of Data:";
-    newTypeName.for = `text-datatype-${boxesCnt - 1}`;
+    newTypeName.for = `text-datatype-${boxesCnt}`;
     newTdLbl2.appendChild(newTypeName);
 
     var select = document.createElement("select");
-    select.setAttribute("id", `text-datatype-${boxesCnt - 1}`);
+    select.setAttribute("id", `text-datatype-${boxesCnt}`);
     select.setAttribute("class", "slcFieldType");
 
     var options = ["string", "int", "double", "bool"];
@@ -94,7 +94,7 @@ function addFieldBox() {
 
     const newMinValInput = document.createElement("input");
     newMinValInput.type = "number";
-    newMinValInput.id = `num-minvalue-${boxesCnt - 1}`;
+    newMinValInput.id = `num-minvalue-${boxesCnt}`;
     newMinValInput.innerHTML += " U+2003 ";
     newTdRange.appendChild(newMinValInput);
 
@@ -105,7 +105,7 @@ function addFieldBox() {
 
     const newMaxValInput = document.createElement("input");
     newMaxValInput.type = "number";
-    newMaxValInput.id = `num-maxvalue-${boxesCnt - 1}`;
+    newMaxValInput.id = `num-maxvalue-${boxesCnt}`;
     newTdRange.appendChild(newMaxValInput);
 
 
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function (elm, ev) {
 function removeLastField() {
     const fieldTypeBoxes = document.getElementsByClassName("field");
     const boxesCnt = fieldTypeBoxes.length;
-    const lastFieldTypeBox = fieldTypeBoxes[boxesCnt - 1];
+    const lastFieldTypeBox = fieldTypeBoxes[boxesCnt];
 
     if (boxesCnt > 1) { // at least one field box must be available
         lastFieldTypeBox.remove();
@@ -144,12 +144,12 @@ function callApi() {
     // Data to be sent in the request body (can be a JSON object, FormData, etc.)
     const dataModelName = document.getElementById("text-datamodel-name").value;
     const dataModelTag = document.getElementById("text-datamodel-tag").value;
-    const dataStartTime = document.getElementById("text-datamodel-tag").value;
+    const dataStartTime = document.getElementById("picker-starttime").value;
 
     const fields = [];
     const fieldCnt = document.getElementsByClassName("field").length;
 
-    for (let i = 0; i < fields.length; i++) {
+    for (let i = 0; i < fieldCnt; i++) {
         let tmp = {
             fieldName: document.getElementById(`text-field-name-${i}`).value,
             fieldType: document.getElementById(`text-datatype-${i}`).value,
@@ -172,24 +172,24 @@ function callApi() {
         },
         body: JSON.stringify(postData) // Convert the data to a JSON string
     };
-
+    console.log(postData);
     // Make the fetch request
-    fetch(url, options)
-        .then(response => {
-            // Check if the request was successful (status code 2xx)
-            if (response.ok) {
-                return response.json(); // Parse the response JSON
-            } else {
-                throw new Error('Request failed');
-            }
-        })
-        .then(data => {
-            // Handle the response data
-            console.log(data);
-        })
-        .catch(error => {
-            // Handle errors during the fetch request
-            console.error('Error:', error);
-        });
+    // fetch(url, options)
+    //     .then(response => {
+    //         // Check if the request was successful (status code 2xx)
+    //         if (response.ok) {
+    //             return "Success"; 
+    //         } else {
+    //             throw new Error('Request failed');
+    //         }
+    //     })
+    //     .then(data => {
+    //         // Handle the response data
+    //         console.log(data);
+    //     })
+    //     .catch(error => {
+    //         // Handle errors during the fetch request
+    //         console.error('Error:', error);
+    //     });
 
 }

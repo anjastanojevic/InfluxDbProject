@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -15,9 +16,19 @@ public class SimulatorController : ControllerBase
 
     [HttpPost]
     [Route("generateData")]
-    public IActionResult GenerateData([FromBody] SimulatorParameters parameters)
+    public IActionResult GenerateData(/* [FromBody] SimulatorParameters parameters */)
     {
-        //implementirati logiku za generisanje podataka
+        try
+        {
+            _simulatorService.GenerateData();    
+        }
+        catch (System.Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return StatusCode(500); // internal server error code
+        }
+        
+        
 
         return Ok();
     }
@@ -26,7 +37,7 @@ public class SimulatorController : ControllerBase
     [Route("saveDataModel")]
     public IActionResult SaveDataModel([FromBody] object obj)
     {
-        string? inputJsonString = obj.ToString();
+        string inputJsonString = obj.ToString();
         if (String.IsNullOrEmpty(inputJsonString))
             return BadRequest(inputJsonString);
         try
@@ -39,7 +50,21 @@ public class SimulatorController : ControllerBase
             throw;
         }
 
-
         return Ok();
+    }
+
+    [HttpGet]
+    [Route("getAllDataModels")]
+    public IActionResult GetAllDataModels() // nekorisceno
+    {
+        var result = _simulatorService.GetAllDataModels();
+        try
+        {
+            return Ok(result);
+        }
+        catch (System.Exception)
+        {
+            return BadRequest(result);
+        }
     }
 }

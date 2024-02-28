@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VeinuEJFeLSpiIJgLq47M5jYw4ikiZDB4azqLdspcAo+rjxIG+1j8v+zM6yAAqM/sCnxvAuAVQ9Uycq0V04kgw==",
+  "dgSpecHash": "vTCd4P3dBCe5ihg/+y1Bl9KYsSOqUSFiv97jdisbODOgBSs0CXwVNKaQvBDHg/g5g/kpCmajrSwIdrE2OWffWg==",
   "success": true,
-  "projectFilePath": "D:\\Anja\\Fakultet\\Timski projekat\\InfluxDbProject\\InfluxDbProject.csproj",
+  "projectFilePath": "D:\\Anja\\Fakultet\\TimskiProjekat\\InfluxDbProject\\InfluxDbProject.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Anja\\.nuget\\packages\\csvhelper\\30.0.1\\csvhelper.30.0.1.nupkg.sha512",
     "C:\\Users\\Anja\\.nuget\\packages\\influxdb.client\\4.14.0\\influxdb.client.4.14.0.nupkg.sha512",

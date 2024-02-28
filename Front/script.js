@@ -1,16 +1,16 @@
 function saveDataModel() {
     let dto = {}; // Data Transfer Object
-    dto.name = document.getElementById("text-datamodel-name");
-    dto.tag = document.getElementById("text-datamodel-tag");
-    dto.time = document.getElementById("picker-starttime");
+    dto.name = document.getElementById("text-datamodel-name").value;
+    dto.tag = document.getElementById("text-datamodel-tag").value;
+    dto.time = document.getElementById("picker-starttime").value;
 
-    let fieldNames = document.getElementsByClassName("txtFieldName");
+    let fieldNames = document.getElementsByClassName("text-field-name");
     let fieldTypes = document.getElementsByClassName("slcFieldType");
     dto.fields = [];
     for (let i = 0; i < fieldNames.length; i++) {
         dto.fields[i] = {
-            fieldName: fieldNames[i].innerHTML,
-            fieldType: fieldTypes[i].innerHTML
+            fieldName: fieldNames[i].value,
+            fieldType: fieldTypes[i].value
         };
     }
 

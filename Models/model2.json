@@ -1,13 +1,19 @@
 {
     "dataModelName": "model2",
     "dataModelTag": "tag1",
-    "startTime": "1 sat",
+    "startTime": "2018-12-25 23:50:55",
     "fields": [
         {
-            "fieldName": "field1",
+            "fieldName": "polje11",
             "dataType": "int",
             "minValue": "0",
-            "maxValue": "1"
+            "maxValue": "10"
+        },
+        {
+            "fieldName": "polje12",
+            "dataType": "int",
+            "minValue": "10",
+            "maxValue": "20"
         }
     ]
 }

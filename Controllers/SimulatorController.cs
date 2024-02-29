@@ -16,23 +16,22 @@ public class SimulatorController : ControllerBase
     }
 
     [HttpPost]
-    [Route("generateData")]
-    public IActionResult GenerateData(/* [FromBody] SimulatorParameters parameters */)
+    [Route("generateData/{generateTime}/{timeInterval}")]
+    public IActionResult GenerateData([FromBody] DataModel data, int generateTime, int timeInterval)
     {
         try
         {
-            _simulatorService.GenerateData();
+            _simulatorService.GenerateData(data, generateTime, timeInterval);
         }
         catch (System.Exception ex)
         {
             Console.WriteLine(ex.Message);
-            return StatusCode(500); // internal server error code
+            return StatusCode(500);
         }
-
-
-
-        return Ok();
+        return Ok("Uspesno generisani podaci.");
     }
+
+
 
     [HttpPost]
     [Route("saveDataModel")]
@@ -92,7 +91,7 @@ public class SimulatorController : ControllerBase
 
         try
         {
-            _influxDbService.InsertDataAsync(measurement, tag, data.StartTime,influxFields);
+            _influxDbService.InsertDataAsync(measurement, tag, data.StartTime, influxFields);
         }
         catch (System.Exception)
         {
@@ -103,9 +102,9 @@ public class SimulatorController : ControllerBase
         return Ok();
     }
 
-    [HttpPost]
-    [Route("queryData")]
-    public async Task<IActionResult> QueryData([FromBody] string measurement)
+    [HttpGet]
+    [Route("queryData/{measurement}")]
+    public async Task<IActionResult> QueryData(string measurement)
     {
         if (string.IsNullOrEmpty(measurement))
         {
@@ -122,4 +121,5 @@ public class SimulatorController : ControllerBase
             return StatusCode(500, $"Error querying data: {ex.Message}");
         }
     }
+
 }

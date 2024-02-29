@@ -137,14 +137,74 @@ function removeLastField() {
     }
 }
 
-function callApi() {
-    // URL for the POST request
-    const url = 'http://localhost:5219/api/simulator/saveDataModel';
+// function callApi() {
+//     // URL for the POST request
+//     const url = 'http://localhost:5219/api/simulator/saveDataModel';
 
-    // Data to be sent in the request body (can be a JSON object, FormData, etc.)
+//     // Data to be sent in the request body (can be a JSON object, FormData, etc.)
+//     const dataModelName = document.getElementById("text-datamodel-name").value;
+//     const dataModelTag = document.getElementById("text-datamodel-tag").value;
+//     const StartTime = document.getElementById("picker-starttime").value;
+
+//     const fields = [];
+//     const fieldCnt = document.getElementsByClassName("field").length;
+
+//     for (let i = 0; i < fieldCnt; i++) {
+//         let tmp = {
+//             fieldName: document.getElementById(`text-field-name-${i}`).value,
+//             fieldType: document.getElementById(`text-datatype-${i}`).value,
+//             minValue: document.getElementById(`num-minvalue-${i}`).value,
+//             maxValue: document.getElementById(`num-maxvalue-${i}`).value
+//         };
+//         fields.push(tmp);
+//     }
+
+//     const postData = {
+//         dataModelName, dataModelTag, StartTime, fields
+//     };
+
+//     // Options for the fetch request
+//     const options = {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json', // Set the content type based on the data being sent
+//             // Add any other headers if needed
+//         },
+//         body: JSON.stringify(postData) // Convert the data to a JSON string
+//     };
+//     console.log(postData);
+//     // Make the fetch request
+//     // fetch(url, options)
+//     //     .then(response => {
+//     //         // Check if the request was successful (status code 2xx)
+//     //         if (response.ok) {
+//     //             return "Success"; 
+//     //         } else {
+//     //             throw new Error('Request failed');
+//     //         }
+//     //     })
+//     //     .then(data => {
+//     //         // Handle the response data
+//     //         console.log(data);
+//     //     })
+//     //     .catch(error => {
+//     //         // Handle errors during the fetch request
+//     //         console.error('Error:', error);
+//     //     });
+
+// }
+function callApi() {
+    // URL za POST zahtjev
+    const generateTime = 10; // Primjer vremena generiranja u sekundama
+    const timeInterval = 1; // Primjer vremenskog intervala u sekundama
+
+    const url = `http://localhost:5219/api/simulator/generateData/${generateTime}/${timeInterval}`;
+
+
+    // Podaci koji će se poslati u tijelu zahtjeva
     const dataModelName = document.getElementById("text-datamodel-name").value;
     const dataModelTag = document.getElementById("text-datamodel-tag").value;
-    const dataStartTime = document.getElementById("picker-starttime").value;
+    const StartTime = document.getElementById("picker-starttime").value;
 
     const fields = [];
     const fieldCnt = document.getElementsByClassName("field").length;
@@ -152,7 +212,7 @@ function callApi() {
     for (let i = 0; i < fieldCnt; i++) {
         let tmp = {
             fieldName: document.getElementById(`text-field-name-${i}`).value,
-            fieldType: document.getElementById(`text-datatype-${i}`).value,
+            dataType: document.getElementById(`text-datatype-${i}`).value,
             minValue: document.getElementById(`num-minvalue-${i}`).value,
             maxValue: document.getElementById(`num-maxvalue-${i}`).value
         };
@@ -160,36 +220,54 @@ function callApi() {
     }
 
     const postData = {
-        dataModelName, dataModelTag, dataStartTime, fields
+        dataModelName, dataModelTag, StartTime, fields
     };
+    console.log(postData);
 
-    // Options for the fetch request
     const options = {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json', // Set the content type based on the data being sent
-            // Add any other headers if needed
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(postData) // Convert the data to a JSON string
+        body: JSON.stringify(postData)
     };
-    console.log(postData);
-    // Make the fetch request
-    // fetch(url, options)
-    //     .then(response => {
-    //         // Check if the request was successful (status code 2xx)
-    //         if (response.ok) {
-    //             return "Success"; 
-    //         } else {
-    //             throw new Error('Request failed');
-    //         }
-    //     })
-    //     .then(data => {
-    //         // Handle the response data
-    //         console.log(data);
-    //     })
-    //     .catch(error => {
-    //         // Handle errors during the fetch request
-    //         console.error('Error:', error);
-    //     });
 
+    // Obavite fetch zahtjev
+    fetch(url, options)
+        .then(response => response)
+        .then(data => {
+            console.log(data);
+            displayData(dataModelName);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
+function displayData(measurement) {
+    const dataList = document.getElementById("data-list");
+    dataList.innerHTML = ''; // Očistiti listu prije dodavanja novih podataka
+
+    // AJAX poziv na API za dohvat podataka
+    fetch(`http://localhost:5219/api/simulator/queryData/${measurement}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(result => {
+        console.log(result);
+        // Ovdje se prikazuju podaci dobiveni iz API-ja
+        result.forEach(item => {
+            console.log(item);
+            const listItem = document.createElement("li");
+            listItem.textContent = `Measurement: ${item.values._measurement}, Value: ${item.values._value}, Tag: ${item.values.loc}`;
+            dataList.appendChild(listItem);
+        });
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
+
+

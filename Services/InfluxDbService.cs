@@ -31,9 +31,10 @@ public class InfluxDbService : IInfluxDbService
             var point = PointData.Measurement(measurement);
             // point.Tag(dataModel.tag); TAG TREBA DA IMA TagName i TagValue
             point = point.Tag("loc", tag);
-            point = point.Timestamp(DateTime.UtcNow, WritePrecision.Ns);
+            point = point.Timestamp( DateTime.Parse(Timestamp), WritePrecision.Ns);
             foreach (var field in fields)
             {
+                Console.WriteLine("1");
                 //point = point.Field("value", _random.NextDouble());
                 point = point.Field(field.Key, field.Value);
             }
@@ -41,7 +42,7 @@ public class InfluxDbService : IInfluxDbService
 
         }
     }
-    public async Task<IEnumerable<FluxTable>> QueryDataAsync(string measurement)
+    public async Task<IEnumerable<FluxRecord>> QueryDataAsync(string measurement)
     {
         var query = $"from(bucket: \"newBucket\")"
                   //+ $"|> range(start: -1h)" 
@@ -50,6 +51,21 @@ public class InfluxDbService : IInfluxDbService
 
         var queryApi = _influxDbClient.GetQueryApi();
         var fluxTables = await queryApi.QueryAsync(query, _org);
-        return fluxTables;
+
+        // Provjerite da li fluxTables sadrži podatke
+        if (fluxTables != null && fluxTables.Any())
+        {
+            // Spojite sve zapise iz svih tablica
+            var allRecords = fluxTables.SelectMany(table => table.Records);
+
+            // Provjerite da li postoji barem jedan zapis
+            if (allRecords.Any())
+            {
+                return allRecords;
+            }
+        }
+
+        // Ako nema podataka, vratite null ili praznu listu, ovisno o zahtjevima vaše aplikacije
+        return null; // ili return new List<FluxRecord>();
     }
 }

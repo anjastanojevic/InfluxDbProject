@@ -4,10 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Globalization;
 public class SimulatorService : ISimulatorService
 {
     private readonly IInfluxDbService _influxDbService;
     private string? currentDataModel;
+    private DateTime startTime;
 
     public SimulatorService(IInfluxDbService influxDbService)
     {
@@ -67,48 +69,88 @@ public class SimulatorService : ISimulatorService
         }
     }
 
-    public void GenerateData(/* string dataModelName */)
+
+    // public void GenerateData(DataModel dataModel,int generateTime, int timeInterval)
+    // {
+    //     // if (String.IsNullOrEmpty(currentDataModel)) return;
+    //     // string dataModelName = currentDataModel;
+
+    //     // string path = $"./Models/{dataModelName}.json";
+    //     // string dataModelJson = LoadDataModel(path);
+
+    //     if (dataModelJson != null)
+    //     {
+    //         dynamic dataModel = JsonConvert.DeserializeObject<ExpandoObject>(dataModelJson);
+    //         var generatedDataNumber = generateTime / timeInterval;
+    //         var tag=dataModel.Tag;
+    //         for (int i = 0; i < generatedDataNumber; i++)
+    //         {
+    //             if (dataModel != null && dataModel.fields != null)
+    //             {
+    //                 var influxFields = new Dictionary<string, object>();
+    //                 DateTime dateTime1 = DateTime.Parse(dataModel.Timestamp);
+    //                 DateTime novaVrednost = dateTime1.AddSeconds(timeInterval);
+
+    //                 foreach (var field in dataModel.fields)
+    //                 {
+    //                     string fieldName = field.fieldName;
+    //                     string dataType = field.dataType;
+    //                     double minValue = Convert.ToDouble(field.minValue);
+    //                     double maxValue = Convert.ToDouble(field.maxValue);
+
+    //                     object generatedData = GenerateRandomData(dataType, minValue, maxValue);
+
+    //                     influxFields.Add(fieldName, generatedData);
+    //                 }
+
+    //                 _influxDbService.InsertDataAsync(dataModel.dataModelName,tag,novaVrednost.ToString(), dataModel).Wait();
+    //             }
+    //             else
+    //             {
+    //                 Console.WriteLine($"Invalid data model format for {dataModelName}");
+    //             }
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Console.WriteLine($"Failed to load data model: {dataModelName}");
+    //     }
+    // }
+
+    public void GenerateData(DataModel dataModel, int generateTime, int timeInterval)
     {
-        if (String.IsNullOrEmpty(currentDataModel)) return;
-        string dataModelName = currentDataModel;
-
-        string path = $"./Models/{dataModelName}.json";
-        string dataModelJson = LoadDataModel(path);
-
-        if (dataModelJson != null)
-        {
-            dynamic dataModel = JsonConvert.DeserializeObject<ExpandoObject>(dataModelJson);
-
-            //ovde da se doda petlja koja se vrti(korisnik prosledjuje trajanje i interval merenja)
-            if (dataModel != null && dataModel.fields != null)
+            var generatedDataNumber = generateTime / timeInterval;
+            var tag = dataModel.DataModelTag;
+            for (int i = 0; i < generatedDataNumber; i++)
             {
-                var influxFields = new Dictionary<string, object>();
-
-                foreach (var field in dataModel!.fields)
+                if (dataModel != null && dataModel.Fields != null)
                 {
-                    string fieldName = field.fieldName;
-                    string dataType = field.dataType;
-                    double minValue = Convert.ToDouble(field.minValue);
-                    double maxValue = Convert.ToDouble(field.maxValue);
+                    var influxFields = new Dictionary<string, object>();
+                    DateTime dateTime1 = DateTime.Parse(dataModel.StartTime);
+                    //DateTime dateTime1 =DateTime.UtcNow;
+                    DateTime novaVrednost = dateTime1.AddSeconds(timeInterval);
+                
+                    foreach (var field in dataModel.Fields)
+                    {
+                        string fieldName = field.FieldName;
+                        string dataType = field.DataType;
+                        double minValue = Convert.ToDouble(field.MinValue);
+                        double maxValue = Convert.ToDouble(field.MaxValue);
 
-                    object generatedData = GenerateRandomData(dataType, minValue, maxValue);
+                        object generatedData = GenerateRandomData(dataType, minValue, maxValue);
 
-                    influxFields.Add(fieldName, generatedData);
+                        influxFields.Add(fieldName, generatedData);
+                    }
+
+                    _influxDbService.InsertDataAsync(dataModel.DataModelName, tag, novaVrednost.ToString(), influxFields).Wait();
                 }
+                else
+                {
+                    Console.WriteLine($"Invalid data model format for {dataModel.DataModelName}");
+                }
+            }
 
-                //_influxDbService.InsertDataAsync("YourMeasurementName", dataModel).Wait();
-            }
-            else
-            {
-                Console.WriteLine($"Invalid data model format for {dataModelName}");
-            }
-        }
-        else
-        {
-            Console.WriteLine($"Failed to load data model: {dataModelName}");
-        }
     }
-
     public object GenerateRandomData(string dataType, double minValue, double maxValue)
     {
         Random random = new Random();

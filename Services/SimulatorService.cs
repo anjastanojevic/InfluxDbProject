@@ -79,9 +79,10 @@ public class SimulatorService : ISimulatorService
         {
             dynamic dataModel = JsonConvert.DeserializeObject<ExpandoObject>(dataModelJson);
 
+            //ovde da se doda petlja koja se vrti(korisnik prosledjuje trajanje i interval merenja)
             if (dataModel != null && dataModel.fields != null)
             {
-                // var influxFields = new Dictionary<string, object>();
+                var influxFields = new Dictionary<string, object>();
 
                 foreach (var field in dataModel!.fields)
                 {
@@ -92,10 +93,10 @@ public class SimulatorService : ISimulatorService
 
                     object generatedData = GenerateRandomData(dataType, minValue, maxValue);
 
-                    (field as Dictionary<string, object>).Add(fieldName, generatedData);
+                    influxFields.Add(fieldName, generatedData);
                 }
 
-                _influxDbService.InsertDataAsync("YourMeasurementName", dataModel).Wait();
+                //_influxDbService.InsertDataAsync("YourMeasurementName", dataModel).Wait();
             }
             else
             {

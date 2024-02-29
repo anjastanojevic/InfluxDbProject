@@ -1,0 +1,13 @@
+{
+    "dataModelName": "model2",
+    "dataModelTag": "tag1",
+    "startTime": "1 sat",
+    "fields": [
+        {
+            "fieldName": "field1",
+            "dataType": "int",
+            "minValue": "0",
+            "maxValue": "1"
+        }
+    ]
+}

@@ -5,9 +5,11 @@ using InfluxDB.Client.Api.Domain;
 using InfluxDB.Client.Core.Flux.Domain;
 using InfluxDB.Client.Writes;
 
+
 public class InfluxDbService : IInfluxDbService
 {
     private readonly InfluxDBClient _influxDbClient;
+    private static readonly Random _random = new Random();
     private readonly string? _token;
     private readonly string? _bucket;
     private readonly string? _org;
@@ -22,25 +24,23 @@ public class InfluxDbService : IInfluxDbService
         _influxDbClient = new InfluxDBClient(_url, _token);
     }
 
-    public async Task InsertDataAsync(string measurement, dynamic dataModel)
+    public async Task InsertDataAsync(string measurement, string tag, string Timestamp, IDictionary<string, object> fields)
     {
         using (var writeApi = _influxDbClient.GetWriteApi())
         {
             var point = PointData.Measurement(measurement);
             // point.Tag(dataModel.tag); TAG TREBA DA IMA TagName i TagValue
-            point.Tag("proba","probaTag");
-
-            foreach (var field in dataModel.fields)
+            point = point.Tag("loc", tag);
+            point = point.Timestamp(DateTime.UtcNow, WritePrecision.Ns);
+            foreach (var field in fields)
             {
-                point.Field(field.Key, field.Value);
-                point.Timestamp(DateTime.UtcNow, WritePrecision.Ns);
+                //point = point.Field("value", _random.NextDouble());
+                point = point.Field(field.Key, field.Value);
             }
+            writeApi.WritePoint(point, _bucket, _org);
 
-            writeApi.WritePoint(point, _bucket, _org); // point -> bucket -> org su argumenti
         }
     }
-
-
     public async Task<IEnumerable<FluxTable>> QueryDataAsync(string measurement)
     {
         var query = $"from(bucket: \"newBucket\")"

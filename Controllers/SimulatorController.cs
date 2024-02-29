@@ -1,6 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
 
+
 [ApiController]
 [Route("api/simulator")]
 public class SimulatorController : ControllerBase
@@ -68,14 +69,30 @@ public class SimulatorController : ControllerBase
         }
     }
 
+
     [HttpPost]
     [Route("insertData")]
-    public IActionResult InsertData([FromBody] object obj)
+    public IActionResult InsertData([FromBody] DataModel data)
     {
-        string measurement = "Proba2";
+        string measurement = data.DataModelName;
+        string tag = data.DataModelTag;
+        var influxFields = new Dictionary<string, object>();
+
+        foreach (var field in data!.Fields)
+        {
+            string fieldName = field.FieldName;
+            string dataType = field.DataType;
+            double minValue = Convert.ToDouble(field.MinValue);
+            double maxValue = Convert.ToDouble(field.MaxValue);
+
+            object generatedData = _simulatorService.GenerateRandomData(dataType, minValue, maxValue);
+
+            influxFields.Add(fieldName, generatedData);
+        }
+
         try
         {
-            _influxDbService.InsertDataAsync(measurement, obj);
+            _influxDbService.InsertDataAsync(measurement, tag, data.StartTime,influxFields);
         }
         catch (System.Exception)
         {

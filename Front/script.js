@@ -1,4 +1,4 @@
-function saveDataModel() {
+function generateDataModel() {
     let dto = {}; // Data Transfer Object
     dto.name = document.getElementById("text-datamodel-name").value;
     dto.tag = document.getElementById("text-datamodel-tag").value;
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function (elm, ev) {
     // attach function to button
     document.getElementById("btn-addfield").addEventListener("click", addFieldBox);
     document.getElementById("btn-removefield").addEventListener("click", removeLastField);
-    document.getElementById("btn-savedata").addEventListener("click", saveDataModel);
+    document.getElementById("btn-gendata").addEventListener("click", generateDataModel);
 });
 
 function removeLastField() {

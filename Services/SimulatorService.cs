@@ -117,40 +117,87 @@ public class SimulatorService : ISimulatorService
     //     }
     // }
 
+    // public void GenerateData(DataModel dataModel, int generateTime, int timeInterval)
+    // {
+    //         var generatedDataNumber = generateTime / timeInterval;
+    //         var tag = dataModel.DataModelTag;
+
+    //         for (int i = 0; i < generatedDataNumber; i++)
+    //         {
+    //             if (dataModel != null && dataModel.Fields != null)
+    //             {
+    //                 var influxFields = new Dictionary<string, object>();
+    //                 DateTime dateTime1 = DateTime.Parse(dataModel.StartTime);
+    //                 //DateTime dateTime1 =DateTime.UtcNow;
+    //                 DateTime novaVrednost = dateTime1.AddSeconds(timeInterval);
+
+    //                 foreach (var field in dataModel.Fields)
+    //                 {
+    //                     string fieldName = field.FieldName;
+    //                     string dataType = field.DataType;
+    //                     double minValue = Convert.ToDouble(field.MinValue);
+    //                     double maxValue = Convert.ToDouble(field.MaxValue);
+
+    //                     object generatedData = GenerateRandomData(dataType, minValue, maxValue);
+
+    //                     influxFields.Add(fieldName, generatedData);
+    //                 }
+
+    //                 _influxDbService.InsertDataAsync(dataModel.DataModelName, tag, novaVrednost.ToString(), influxFields).Wait();
+    //             }
+    //             else
+    //             {
+    //                 Console.WriteLine($"Invalid data model format for {dataModel.DataModelName}");
+    //             }
+    //         }
+
+    // }
     public void GenerateData(DataModel dataModel, int generateTime, int timeInterval)
     {
-            var generatedDataNumber = generateTime / timeInterval;
-            var tag = dataModel.DataModelTag;
+        var generatedDataNumber = generateTime / timeInterval;
+        var tag = dataModel.DataModelTag;
+        var dataPoints = new List<Dictionary<string, object>>();
+        var dateTimeList = new List<DateTime>();
+
+
+
+        if (dataModel != null && dataModel.Fields != null)
+        {
+            DateTime novaVrednost = DateTime.Now;
             for (int i = 0; i < generatedDataNumber; i++)
             {
-                if (dataModel != null && dataModel.Fields != null)
+                var influxFields = new Dictionary<string, object>();
+                DateTime dateTime1 = DateTime.Parse(dataModel.StartTime);
+                novaVrednost = dateTime1.AddSeconds(timeInterval);
+
+                foreach (var field in dataModel.Fields)
                 {
-                    var influxFields = new Dictionary<string, object>();
-                    DateTime dateTime1 = DateTime.Parse(dataModel.StartTime);
-                    //DateTime dateTime1 =DateTime.UtcNow;
-                    DateTime novaVrednost = dateTime1.AddSeconds(timeInterval);
-                
-                    foreach (var field in dataModel.Fields)
-                    {
-                        string fieldName = field.FieldName;
-                        string dataType = field.DataType;
-                        double minValue = Convert.ToDouble(field.MinValue);
-                        double maxValue = Convert.ToDouble(field.MaxValue);
+                    string fieldName = field.FieldName;
+                    string dataType = field.DataType;
+                    double minValue = Convert.ToDouble(field.MinValue);
+                    double maxValue = Convert.ToDouble(field.MaxValue);
 
-                        object generatedData = GenerateRandomData(dataType, minValue, maxValue);
+                    object generatedData = GenerateRandomData(dataType, minValue, maxValue);
 
-                        influxFields.Add(fieldName, generatedData);
-                    }
-
-                    _influxDbService.InsertDataAsync(dataModel.DataModelName, tag, novaVrednost.ToString(), influxFields).Wait();
+                    influxFields.Add(fieldName, generatedData);
                 }
-                else
-                {
-                    Console.WriteLine($"Invalid data model format for {dataModel.DataModelName}");
-                }
+
+                dataPoints.Add(influxFields);
+                dateTimeList.Add(novaVrednost);
             }
+            _influxDbService.InsertAllDataAsync(dataModel.DataModelName, tag,novaVrednost , dataPoints).Wait();
 
+        }
+        else
+        {
+            Console.WriteLine($"Invalid data model format for {dataModel.DataModelName}");
+        }
     }
+
+
+
+
+
     public object GenerateRandomData(string dataType, double minValue, double maxValue)
     {
         Random random = new Random();

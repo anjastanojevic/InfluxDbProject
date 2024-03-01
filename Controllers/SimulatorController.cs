@@ -35,7 +35,7 @@ public class SimulatorController : ControllerBase
 
     [HttpPost]
     [Route("saveDataModel")]
-    public IActionResult SaveDataModel([FromBody] object obj)
+    public IActionResult SaveDataModel([FromBody] object obj)//nekorisceno
     {
         string inputJsonString = obj.ToString();
         if (String.IsNullOrEmpty(inputJsonString))

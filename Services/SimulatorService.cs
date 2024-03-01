@@ -69,97 +69,12 @@ public class SimulatorService : ISimulatorService
         }
     }
 
-
-    // public void GenerateData(DataModel dataModel,int generateTime, int timeInterval)
-    // {
-    //     // if (String.IsNullOrEmpty(currentDataModel)) return;
-    //     // string dataModelName = currentDataModel;
-
-    //     // string path = $"./Models/{dataModelName}.json";
-    //     // string dataModelJson = LoadDataModel(path);
-
-    //     if (dataModelJson != null)
-    //     {
-    //         dynamic dataModel = JsonConvert.DeserializeObject<ExpandoObject>(dataModelJson);
-    //         var generatedDataNumber = generateTime / timeInterval;
-    //         var tag=dataModel.Tag;
-    //         for (int i = 0; i < generatedDataNumber; i++)
-    //         {
-    //             if (dataModel != null && dataModel.fields != null)
-    //             {
-    //                 var influxFields = new Dictionary<string, object>();
-    //                 DateTime dateTime1 = DateTime.Parse(dataModel.Timestamp);
-    //                 DateTime novaVrednost = dateTime1.AddSeconds(timeInterval);
-
-    //                 foreach (var field in dataModel.fields)
-    //                 {
-    //                     string fieldName = field.fieldName;
-    //                     string dataType = field.dataType;
-    //                     double minValue = Convert.ToDouble(field.minValue);
-    //                     double maxValue = Convert.ToDouble(field.maxValue);
-
-    //                     object generatedData = GenerateRandomData(dataType, minValue, maxValue);
-
-    //                     influxFields.Add(fieldName, generatedData);
-    //                 }
-
-    //                 _influxDbService.InsertDataAsync(dataModel.dataModelName,tag,novaVrednost.ToString(), dataModel).Wait();
-    //             }
-    //             else
-    //             {
-    //                 Console.WriteLine($"Invalid data model format for {dataModelName}");
-    //             }
-    //         }
-    //     }
-    //     else
-    //     {
-    //         Console.WriteLine($"Failed to load data model: {dataModelName}");
-    //     }
-    // }
-
-    // public void GenerateData(DataModel dataModel, int generateTime, int timeInterval)
-    // {
-    //         var generatedDataNumber = generateTime / timeInterval;
-    //         var tag = dataModel.DataModelTag;
-
-    //         for (int i = 0; i < generatedDataNumber; i++)
-    //         {
-    //             if (dataModel != null && dataModel.Fields != null)
-    //             {
-    //                 var influxFields = new Dictionary<string, object>();
-    //                 DateTime dateTime1 = DateTime.Parse(dataModel.StartTime);
-    //                 //DateTime dateTime1 =DateTime.UtcNow;
-    //                 DateTime novaVrednost = dateTime1.AddSeconds(timeInterval);
-
-    //                 foreach (var field in dataModel.Fields)
-    //                 {
-    //                     string fieldName = field.FieldName;
-    //                     string dataType = field.DataType;
-    //                     double minValue = Convert.ToDouble(field.MinValue);
-    //                     double maxValue = Convert.ToDouble(field.MaxValue);
-
-    //                     object generatedData = GenerateRandomData(dataType, minValue, maxValue);
-
-    //                     influxFields.Add(fieldName, generatedData);
-    //                 }
-
-    //                 _influxDbService.InsertDataAsync(dataModel.DataModelName, tag, novaVrednost.ToString(), influxFields).Wait();
-    //             }
-    //             else
-    //             {
-    //                 Console.WriteLine($"Invalid data model format for {dataModel.DataModelName}");
-    //             }
-    //         }
-
-    // }
     public void GenerateData(DataModel dataModel, int generateTime, int timeInterval)
     {
         var generatedDataNumber = generateTime / timeInterval;
         var tag = dataModel.DataModelTag;
         var dataPoints = new List<Dictionary<string, object>>();
         var dateTimeList = new List<DateTime>();
-
-
 
         if (dataModel != null && dataModel.Fields != null)
         {
@@ -196,14 +111,9 @@ public class SimulatorService : ISimulatorService
     }
 
 
-
-
-
     public object GenerateRandomData(string dataType, double minValue, double maxValue)
     {
         Random random = new Random();
-
-        // OVDE DA SE UBACI GENERISANJE VISE PODATAKA
 
         switch (dataType.ToLower())
         {
@@ -235,14 +145,11 @@ public class SimulatorService : ISimulatorService
 
         try
         {
-            // Check if the folder exists
             if (Directory.Exists(folderPath))
             {
-                // Get all file names in the folder
                 string[] files = Directory.GetFiles(folderPath);
 
                 // files = files.Select(x => { Path.GetFileNameWithoutExtension(x); });
-                // Add file names to the list
                 fileNames.AddRange(files);
             }
             else
@@ -256,11 +163,6 @@ public class SimulatorService : ISimulatorService
         }
 
         return fileNames;
-    }
-
-    public void ShowData()
-    {
-
     }
 }
 

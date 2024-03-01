@@ -29,12 +29,10 @@ public class InfluxDbService : IInfluxDbService
         using (var writeApi = _influxDbClient.GetWriteApi())
         {
             var point = PointData.Measurement(measurement);
-            // point.Tag(dataModel.tag); TAG TREBA DA IMA TagName i TagValue
             point = point.Tag("tag", tag);
             point = point.Timestamp(DateTime.Parse(Timestamp), WritePrecision.Ns);
             foreach (var field in fields)
             {
-                //point = point.Field("value", _random.NextDouble());
                 point = point.Field(field.Key, field.Value);
             }
             writeApi.WritePoint(point, _bucket, _org);
@@ -46,7 +44,7 @@ public class InfluxDbService : IInfluxDbService
         using (var writeApi = _influxDbClient.GetWriteApi())
         {
 
-            int i=0;
+            int i = 0;
             foreach (var dataPoint in dataPoints)
             {
                 var point = PointData.Measurement(measurement);
@@ -69,24 +67,20 @@ public class InfluxDbService : IInfluxDbService
         using (var writeApi = _influxDbClient.GetWriteApi())
         {
 
-            long increment = 1; // Povećanje vremena između točaka (možete prilagoditi ovo po potrebi)
+            long increment = 1;
 
             foreach (var dataPoint in dataPoints)
             {
                 var point = PointData.Measurement(measurement);
                 point = point.Tag("tag", tag);
                 point = point.Timestamp(Timestamp, WritePrecision.Ns);
-                
+
                 foreach (var field in dataPoint)
                 {
-                    // Console.WriteLine(field.Key);
-                    // Console.WriteLine(field.Value);
                     point = point.Field(field.Key, field.Value);
                 }
 
                 writeApi.WritePoint(point, _bucket, _org);
-
-                // Inkrementirajte vremenski žig za sljedeću točku kako biste osigurali jedinstvenost vremena
                 Timestamp = Timestamp.AddSeconds(increment);
             }
         }
@@ -102,20 +96,15 @@ public class InfluxDbService : IInfluxDbService
         var queryApi = _influxDbClient.GetQueryApi();
         var fluxTables = await queryApi.QueryAsync(query, _org);
 
-        // Provjerite da li fluxTables sadrži podatke
         if (fluxTables != null && fluxTables.Any())
         {
-            // Spojite sve zapise iz svih tablica
             var allRecords = fluxTables.SelectMany(table => table.Records);
 
-            // Provjerite da li postoji barem jedan zapis
             if (allRecords.Any())
             {
                 return allRecords;
             }
         }
-
-        // Ako nema podataka, vratite null ili praznu listu, ovisno o zahtjevima vaše aplikacije
-        return null; // ili return new List<FluxRecord>();
+        return null;
     }
 }

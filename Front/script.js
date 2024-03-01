@@ -23,11 +23,9 @@ function addFieldBox() {
     const boxesCnt = fieldTypeBoxes.length;
     const lastFieldTypeBox = fieldTypeBoxes[boxesCnt - 1];
 
-    // create wrapper div
     const newWrapDiv = document.createElement("tbody");
     newWrapDiv.className = "field";
 
-    // create row 1
     const newRow1 = document.createElement("tr");
 
     const newTdLbl1 = document.createElement("td");
@@ -47,7 +45,6 @@ function addFieldBox() {
     newNameInput.className = "text-field-name";
     newTdInp.appendChild(newNameInput);
 
-    // create row 2
     const newRow2 = document.createElement("tr");
 
     const newTdLbl2 = document.createElement("td");
@@ -74,8 +71,6 @@ function addFieldBox() {
     }
     newTdSlc.appendChild(select);
 
-
-    // create row 3
     const newRow3 = document.createElement("tr");
 
     const newTdLbl3 = document.createElement("td");
@@ -118,7 +113,6 @@ function addFieldBox() {
 }
 
 document.addEventListener("DOMContentLoaded", function (elm, ev) {
-    // attach function to button
     document.getElementById("btn-addfield").addEventListener("click", addFieldBox);
     document.getElementById("btn-removefield").addEventListener("click", removeLastField);
     document.getElementById("btn-gendata").addEventListener("click", generateDataModel);
@@ -130,7 +124,7 @@ function removeLastField() {
     const boxesCnt = fieldTypeBoxes.length;
     const lastFieldTypeBox = fieldTypeBoxes[boxesCnt - 1];
 
-    if (boxesCnt > 1) { // at least one field box must be available
+    if (boxesCnt > 1) { 
         lastFieldTypeBox.remove();
     }
     else {
@@ -195,14 +189,11 @@ function removeLastField() {
 
 // }
 function callApi() {
-    // URL za POST zahtjev
     const generateTime = document.getElementById("num-simlen").value;
     const timeInterval = document.getElementById("num-interval").value;
 
     const url = `http://localhost:5219/api/simulator/generateData/${generateTime}/${timeInterval}`;
 
-
-    // Podaci koji će se poslati u tijelu zahtjeva
     const dataModelName = document.getElementById("text-datamodel-name").value;
     const dataModelTag = document.getElementById("text-datamodel-tag").value;
     const startTime = document.getElementById("picker-starttime").value;
@@ -223,7 +214,6 @@ function callApi() {
     const postData = {
         dataModelName, dataModelTag, startTime, fields,
     };
-    // console.log(postData);
 
     const options = {
         method: 'POST',
@@ -248,18 +238,15 @@ function displayData(measurement) {
     const dataList = document.getElementById("data-list");
     dataList.innerHTML = '';
 
-    // AJAX poziv na API za dohvat podataka
     fetch(`http://localhost:5219/api/simulator/queryData/${measurement}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            // if (response.json() === "") throw new Error("Bad JSON / Bad data");
             return response.json();
         })
         .then(result => {
             console.log(result);
-            // Ovdje se prikazuju podaci dobiveni iz API-ja
             result.forEach(item => {
                 console.log(item);
                 const listItem = document.createElement("li");

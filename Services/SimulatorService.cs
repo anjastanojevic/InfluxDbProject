@@ -17,9 +17,7 @@ public class SimulatorService : ISimulatorService
     }
     public void SaveDataModel(string inputJsonString)
     {
-        // create dynamic object from inputJsonString
         dynamic expando = JsonConvert.DeserializeObject<ExpandoObject>(inputJsonString)!;
-        // string json = Newtonsoft.Json.JsonConvert.SerializeObject(expando);
         string path;
         if (expando == null)
         {
@@ -82,7 +80,6 @@ public class SimulatorService : ISimulatorService
             for (int i = 0; i < generatedDataNumber; i++)
             {
                 var influxFields = new Dictionary<string, object>();
-                // novaVrednost = novaVrednost.AddSeconds(timeInterval);
 
                 foreach (var field in dataModel.Fields)
                 {
@@ -99,8 +96,6 @@ public class SimulatorService : ISimulatorService
                 dataPoints.Add(influxFields);
                 dateTimeList.Add(novaVrednost);
             }
-            // dateTimeList.ForEach(x=>Console.WriteLine(x));
-            // _influxDbService.InsertAllDataAsync(dataModel.DataModelName, tag, dateTimeList, dataPoints).Wait();
             _influxDbService.InsertAllDataAsync(dataModel.DataModelName, tag, novaVrednost, dataPoints).Wait();
 
         }
@@ -148,8 +143,7 @@ public class SimulatorService : ISimulatorService
             if (Directory.Exists(folderPath))
             {
                 string[] files = Directory.GetFiles(folderPath);
-
-                // files = files.Select(x => { Path.GetFileNameWithoutExtension(x); });
+                
                 fileNames.AddRange(files);
             }
             else

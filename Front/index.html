@@ -12,76 +12,83 @@
 
 <body>
     <h1>Create a Data Model</h1>
-    <div class="container">
-    <form id="form-datamodel">
-        <table id="tbl">
-            <tr>
-                <td><label for="text-datamodel-name">Name:</label></td>
-                <td><input type="text" id="text-datamodel-name" /></td>
-            </tr>
-            <tr>
-                <td><label for="text-datamodel-tag">Tag:</label></td>
-                <td><input type="text" id="text-datamodel-tag" /></td>
-            </tr>
-            <tr>
-                <td><label for="picker-starttime">Pick a starting time: (future dates do not work)</label></td>
-                <td><input type="datetime-local" id="picker-starttime" name="" /></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><label>Fields:</label></td>
-            </tr>
-            <tbody class="field">
-                <tr>
-                    <td><label for="text-field-name-0">Name:</label></td>
-                    <td><input type="text" id="text-field-name-0" class="text-field-name" /></td>
-                </tr>
-                <tr>
-                    <td><label for="text-datatype-0">Type of Data:</label></td>
-                    <td><select id="text-datatype-0" class="slcFieldType">
-                            <option value="string">string</option>
-                            <option value="int">int</option>
-                            <option value="double">double</option>
-                            <option value="bool">bool</option>
-                        </select></td>
-                </tr>
-                <tr class="last">
-                    <td><label>Value Range:</label></td>
-                    <td>From: <input type="number" id="num-minvalue-0"> <br>
-                        To: <input type="number" id="num-maxvalue-0">
-                    </td>
-                </tr>
-            </tbody>
-            <tr>
-                <td></td>
-                <td>
-                    <button id="btn-addfield" type="button">Add a Field</button>
-                    <button id="btn-removefield" type="button">Remove Last Field</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Simulation length (sec): <input type="number" id="num-simlen"><br>
-                    Measurement interval (sec): <input type="number" id="num-interval">
-                </td>
-                <td>
+        <div class="container">
+            <form id="form-datamodel">
+                <h2>Create a form</h2>
+                <table id="tbl">
+                    <tr>
+                        <td><label for="text-datamodel-name">Name:</label></td>
+                        <td><input type="text" id="text-datamodel-name" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="text-datamodel-tag">Tag:</label></td>
+                        <td><input type="text" id="text-datamodel-tag" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="picker-starttime">Pick a starting time: (future dates do not work)</label></td>
+                        <td><input type="datetime-local" id="picker-starttime" name="" /></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><label>Fields:</label></td>
+                    </tr>
+                    <tbody class="field">
+                        <tr>
+                            <td><label for="text-field-name-0">Name:</label></td>
+                            <td><input type="text" id="text-field-name-0" class="text-field-name" /></td>
+                        </tr>
+                        <tr>
+                            <td><label for="text-datatype-0">Type of Data:</label></td>
+                            <td><select id="text-datatype-0" class="slcFieldType">
+                                    <option value="string">string</option>
+                                    <option value="int">int</option>
+                                    <option value="double">double</option>
+                                    <option value="bool">bool</option>
+                                </select></td>
+                        </tr>
+                        <tr class="last">
+                            <td><label>Value Range:</label></td>
+                            <td>From: <input type="number" id="num-minvalue-0"> <br>
+                                To: <input type="number" id="num-maxvalue-0">
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button id="btn-addfield" type="button">Add a Field</button>
+                            <button id="btn-removefield" type="button">Remove Last Field</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Simulation length (sec): <input type="number" id="num-simlen"><br>
+                            Measurement interval (sec): <input type="number" id="num-interval">
+                        </td>
+                        <td>
+                            <button id="btn-gendata" type="button">Generate Data</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <form id="form-show-data">
+                <h2>Show Data</h2>
+                <table id="tabl">
+                    <tr>
+                        <td>
+                            Model name: <input type="text" name="" id="txt-modelname">
+                        </td>
+                        <td>
+                            <button id="btn-savedata" type="button">QUERY</button>
+                        </td>
+    
+                    </tr>
+                </table>
+                <ul id="data-list"></ul>
+            </form>
+        </div>
 
-                    <button id="btn-gendata" type="button">Generate Data</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Model name: <input type="text" name="" id="txt-modelname">
-                </td>
-                <td>
-                    <button id="btn-savedata" type="button">QUERY</button>
-                </td>
-
-            </tr>
-        </table>
-    </form>
-    <ul id="data-list"></ul>
-</div>
+        
 
 </body>
 

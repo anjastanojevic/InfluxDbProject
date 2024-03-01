@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InfluxDbProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+573c7ca1af4db8c0887baa5486d48abc973ae732")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+08893be25c0562450a2ff8a634e40ccab8097868")]
 [assembly: System.Reflection.AssemblyProductAttribute("InfluxDbProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InfluxDbProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

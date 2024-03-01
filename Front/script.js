@@ -117,6 +117,8 @@ document.addEventListener("DOMContentLoaded", function (elm, ev) {
     document.getElementById("btn-removefield").addEventListener("click", removeLastField);
     document.getElementById("btn-gendata").addEventListener("click", generateDataModel);
     document.getElementById("btn-savedata").addEventListener("click", displayDataPlus);
+    const currentDate = new Date().toISOString().slice(0, 16);
+    document.getElementById("picker-starttime").max = currentDate;
 });
 
 function removeLastField() {

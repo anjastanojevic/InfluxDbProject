@@ -88,7 +88,7 @@ public class InfluxDbService : IInfluxDbService
 
     public async Task<IEnumerable<FluxRecord>> QueryDataAsync(string measurement)
     {
-        var query = $"from(bucket: \"newBucket\")"
+        var query = $"from(bucket: \"{_bucket}\")"
                   //+ $"|> range(start: -1h)" 
                   + $"|> range(start: 0)"
                   + $"|> filter(fn: (r) => r._measurement == \"{measurement}\")";

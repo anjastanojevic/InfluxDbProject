@@ -1505,23 +1505,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Lazar\\.nuget\\packages\\": {},
+    "C:\\Users\\Anja\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Lazar\\Desktop\\InfluxDbProject\\InfluxDbProject.csproj",
+      "projectUniqueName": "D:\\Anja\\Fakultet\\TimskiProjekat\\InfluxDbProject\\InfluxDbProject.csproj",
       "projectName": "InfluxDbProject",
-      "projectPath": "C:\\Users\\Lazar\\Desktop\\InfluxDbProject\\InfluxDbProject.csproj",
-      "packagesPath": "C:\\Users\\Lazar\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Lazar\\Desktop\\InfluxDbProject\\obj\\",
+      "projectPath": "D:\\Anja\\Fakultet\\TimskiProjekat\\InfluxDbProject\\InfluxDbProject.csproj",
+      "packagesPath": "C:\\Users\\Anja\\.nuget\\packages\\",
+      "outputPath": "D:\\Anja\\Fakultet\\TimskiProjekat\\InfluxDbProject\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Lazar\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Anja\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],

@@ -30,7 +30,7 @@ public class InfluxDbService : IInfluxDbService
         {
             var point = PointData.Measurement(measurement);
             // point.Tag(dataModel.tag); TAG TREBA DA IMA TagName i TagValue
-            point = point.Tag("loc", tag);
+            point = point.Tag("tag", tag);
             point = point.Timestamp(DateTime.Parse(Timestamp), WritePrecision.Ns);
             foreach (var field in fields)
             {
@@ -41,54 +41,56 @@ public class InfluxDbService : IInfluxDbService
 
         }
     }
-    // public async Task InsertAllDataAsync(string measurement, string tag, List<DateTime> Timestamp, List<Dictionary<string, object>> dataPoints)
-    // {
-    //     using (var writeApi = _influxDbClient.GetWriteApi())
-    //     {
-            
-    //         int i=0;
-    //         foreach (var dataPoint in dataPoints)
-    //         {
-    //             var point = PointData.Measurement(measurement);
-    //             point = point.Tag("loc", tag);
-
-    //             point = point.Timestamp(Timestamp[i], WritePrecision.Ns);
-
-    //             foreach (var field in dataPoint)
-    //             {
-    //                 point = point.Field(field.Key, field.Value);
-    //             }
-    //             i++;
-
-    //             writeApi.WritePoint(point, _bucket, _org);
-    //         }
-    //     }
-    // }
-    public async Task InsertAllDataAsync(string measurement, string tag, DateTime Timestamp, List<Dictionary<string, object>> dataPoints)
-{
-    using (var writeApi = _influxDbClient.GetWriteApi())
+    public async Task InsertAllDataAsync(string measurement, string tag, List<DateTime> Timestamps, List<Dictionary<string, object>> dataPoints) // NEKORISCENO
     {
-        
-        long increment = 1; // Povećanje vremena između točaka (možete prilagoditi ovo po potrebi)
-
-        foreach (var dataPoint in dataPoints)
+        using (var writeApi = _influxDbClient.GetWriteApi())
         {
-            var point = PointData.Measurement(measurement);
-            point = point.Tag("loc", tag);
-            point = point.Timestamp(Timestamp, WritePrecision.Ns);
 
-            foreach (var field in dataPoint)
+            int i=0;
+            foreach (var dataPoint in dataPoints)
             {
-                point = point.Field(field.Key, field.Value);
+                var point = PointData.Measurement(measurement);
+                point = point.Tag("tag", tag);
+
+                point = point.Timestamp(Timestamps[i], WritePrecision.Ns);
+
+                foreach (var field in dataPoint)
+                {
+                    point = point.Field(field.Key, field.Value);
+                }
+                i++;
+
+                writeApi.WritePoint(point, _bucket, _org);
             }
-
-            writeApi.WritePoint(point, _bucket, _org);
-
-            // Inkrementirajte vremenski žig za sljedeću točku kako biste osigurali jedinstvenost vremena
-            Timestamp = Timestamp.AddTicks(increment);
         }
     }
-}
+    public async Task InsertAllDataAsync(string measurement, string tag, DateTime Timestamp, List<Dictionary<string, object>> dataPoints)
+    {
+        using (var writeApi = _influxDbClient.GetWriteApi())
+        {
+
+            long increment = 1; // Povećanje vremena između točaka (možete prilagoditi ovo po potrebi)
+
+            foreach (var dataPoint in dataPoints)
+            {
+                var point = PointData.Measurement(measurement);
+                point = point.Tag("tag", tag);
+                point = point.Timestamp(Timestamp, WritePrecision.Ns);
+                
+                foreach (var field in dataPoint)
+                {
+                    // Console.WriteLine(field.Key);
+                    // Console.WriteLine(field.Value);
+                    point = point.Field(field.Key, field.Value);
+                }
+
+                writeApi.WritePoint(point, _bucket, _org);
+
+                // Inkrementirajte vremenski žig za sljedeću točku kako biste osigurali jedinstvenost vremena
+                Timestamp = Timestamp.AddSeconds(increment);
+            }
+        }
+    }
 
     public async Task<IEnumerable<FluxRecord>> QueryDataAsync(string measurement)
     {

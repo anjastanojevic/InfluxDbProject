@@ -23,7 +23,7 @@
                 <td><input type="text" id="text-datamodel-tag" /></td>
             </tr>
             <tr>
-                <td><label for="picker-starttime">Pick a starting time:</label></td>
+                <td><label for="picker-starttime">Pick a starting time: (future dates do not work)</label></td>
                 <td><input type="datetime-local" id="picker-starttime" name="" /></td>
             </tr>
             <tr>
@@ -46,7 +46,7 @@
                 </tr>
                 <tr class="last">
                     <td><label>Value Range:</label></td>
-                    <td>From: <input type="number" id="num-minvalue-0"> &emsp;
+                    <td>From: <input type="number" id="num-minvalue-0"> <br>
                         To: <input type="number" id="num-maxvalue-0">
                     </td>
                 </tr>
@@ -59,8 +59,23 @@
                 </td>
             </tr>
             <tr>
-                <td></td>
-                <td><button id="btn-savedata" type="button">Save Data Model</button><button id="btn-gendata" type="button">Generate Data</button></td>
+                <td>
+                    Simulation length (sec): <input type="number" id="num-simlen"><br>
+                    Measurement interval (sec): <input type="number" id="num-interval">
+                </td>
+                <td>
+
+                    <button id="btn-gendata" type="button">Generate Data</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Model name: <input type="text" name="" id="txt-modelname">
+                </td>
+                <td>
+                    <button id="btn-savedata" type="button">QUERY</button>
+                </td>
+
             </tr>
         </table>
     </form>

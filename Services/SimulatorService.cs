@@ -163,12 +163,11 @@ public class SimulatorService : ISimulatorService
 
         if (dataModel != null && dataModel.Fields != null)
         {
-            DateTime novaVrednost = DateTime.Now;
+            DateTime novaVrednost = DateTime.Parse(dataModel.StartTime);
             for (int i = 0; i < generatedDataNumber; i++)
             {
                 var influxFields = new Dictionary<string, object>();
-                DateTime dateTime1 = DateTime.Parse(dataModel.StartTime);
-                novaVrednost = dateTime1.AddSeconds(timeInterval);
+                // novaVrednost = novaVrednost.AddSeconds(timeInterval);
 
                 foreach (var field in dataModel.Fields)
                 {
@@ -185,7 +184,9 @@ public class SimulatorService : ISimulatorService
                 dataPoints.Add(influxFields);
                 dateTimeList.Add(novaVrednost);
             }
-            _influxDbService.InsertAllDataAsync(dataModel.DataModelName, tag,novaVrednost , dataPoints).Wait();
+            // dateTimeList.ForEach(x=>Console.WriteLine(x));
+            // _influxDbService.InsertAllDataAsync(dataModel.DataModelName, tag, dateTimeList, dataPoints).Wait();
+            _influxDbService.InsertAllDataAsync(dataModel.DataModelName, tag, novaVrednost, dataPoints).Wait();
 
         }
         else

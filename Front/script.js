@@ -1,18 +1,18 @@
 function generateDataModel() {
-    let dto = {}; // Data Transfer Object
-    dto.name = document.getElementById("text-datamodel-name").value;
-    dto.tag = document.getElementById("text-datamodel-tag").value;
-    dto.time = document.getElementById("picker-starttime").value;
+    // let dto = {}; // Data Transfer Object
+    // dto.name = document.getElementById("text-datamodel-name").value;
+    // dto.tag = document.getElementById("text-datamodel-tag").value;
+    // dto.time = document.getElementById("picker-starttime").value;
 
-    let fieldNames = document.getElementsByClassName("text-field-name");
-    let fieldTypes = document.getElementsByClassName("slcFieldType");
-    dto.fields = [];
-    for (let i = 0; i < fieldNames.length; i++) {
-        dto.fields[i] = {
-            fieldName: fieldNames[i].value,
-            fieldType: fieldTypes[i].value
-        };
-    }
+    // let fieldNames = document.getElementsByClassName("text-field-name");
+    // let fieldTypes = document.getElementsByClassName("slcFieldType");
+    // dto.fields = [];
+    // for (let i = 0; i < fieldNames.length; i++) {
+    //     dto.fields[i] = {
+    //         fieldName: fieldNames[i].value,
+    //         fieldType: fieldTypes[i].value
+    //     };
+    // }
 
     callApi();
 }
@@ -89,17 +89,17 @@ function addFieldBox() {
     newTdLbl3.appendChild(newValRangeLbl);
 
     const newMinValLbl = document.createElement("label");
-    newMinValLbl.innerHTML = "To:";
+    newMinValLbl.innerHTML = "From:";
     newTdRange.appendChild(newMinValLbl);
 
     const newMinValInput = document.createElement("input");
     newMinValInput.type = "number";
     newMinValInput.id = `num-minvalue-${boxesCnt}`;
-    newMinValInput.innerHTML += " U+2003 ";
     newTdRange.appendChild(newMinValInput);
+    newTdRange.appendChild(document.createElement("br"));
 
     const newMaxValLbl = document.createElement("label");
-    newMaxValLbl.innerHTML = "From:";
+    newMaxValLbl.innerHTML = "To:";
     newTdRange.appendChild(newMaxValLbl);
 
 
@@ -122,12 +122,13 @@ document.addEventListener("DOMContentLoaded", function (elm, ev) {
     document.getElementById("btn-addfield").addEventListener("click", addFieldBox);
     document.getElementById("btn-removefield").addEventListener("click", removeLastField);
     document.getElementById("btn-gendata").addEventListener("click", generateDataModel);
+    document.getElementById("btn-savedata").addEventListener("click", displayDataPlus);
 });
 
 function removeLastField() {
     const fieldTypeBoxes = document.getElementsByClassName("field");
     const boxesCnt = fieldTypeBoxes.length;
-    const lastFieldTypeBox = fieldTypeBoxes[boxesCnt];
+    const lastFieldTypeBox = fieldTypeBoxes[boxesCnt - 1];
 
     if (boxesCnt > 1) { // at least one field box must be available
         lastFieldTypeBox.remove();
@@ -195,8 +196,8 @@ function removeLastField() {
 // }
 function callApi() {
     // URL za POST zahtjev
-    const generateTime = 10; // Primjer vremena generiranja u sekundama
-    const timeInterval = 1; // Primjer vremenskog intervala u sekundama
+    const generateTime = document.getElementById("num-simlen").value;
+    const timeInterval = document.getElementById("num-interval").value;
 
     const url = `http://localhost:5219/api/simulator/generateData/${generateTime}/${timeInterval}`;
 
@@ -204,7 +205,7 @@ function callApi() {
     // Podaci koji će se poslati u tijelu zahtjeva
     const dataModelName = document.getElementById("text-datamodel-name").value;
     const dataModelTag = document.getElementById("text-datamodel-tag").value;
-    const StartTime = document.getElementById("picker-starttime").value;
+    const startTime = document.getElementById("picker-starttime").value;
 
     const fields = [];
     const fieldCnt = document.getElementsByClassName("field").length;
@@ -220,9 +221,9 @@ function callApi() {
     }
 
     const postData = {
-        dataModelName, dataModelTag, StartTime, fields
+        dataModelName, dataModelTag, startTime, fields,
     };
-    console.log(postData);
+    // console.log(postData);
 
     const options = {
         method: 'POST',
@@ -232,7 +233,7 @@ function callApi() {
         body: JSON.stringify(postData)
     };
 
-    // Obavite fetch zahtjev
+
     fetch(url, options)
         .then(response => response)
         .then(data => {
@@ -245,29 +246,34 @@ function callApi() {
 }
 function displayData(measurement) {
     const dataList = document.getElementById("data-list");
-    dataList.innerHTML = ''; // Očistiti listu prije dodavanja novih podataka
+    dataList.innerHTML = '';
 
     // AJAX poziv na API za dohvat podataka
     fetch(`http://localhost:5219/api/simulator/queryData/${measurement}`)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(result => {
-        console.log(result);
-        // Ovdje se prikazuju podaci dobiveni iz API-ja
-        result.forEach(item => {
-            console.log(item);
-            const listItem = document.createElement("li");
-            listItem.textContent = `Measurement: ${item.values._measurement}, Value: ${item.values._value}, Tag: ${item.values.loc}`;
-            dataList.appendChild(listItem);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // if (response.json() === "") throw new Error("Bad JSON / Bad data");
+            return response.json();
+        })
+        .then(result => {
+            console.log(result);
+            // Ovdje se prikazuju podaci dobiveni iz API-ja
+            result.forEach(item => {
+                console.log(item);
+                const listItem = document.createElement("li");
+                listItem.textContent = `Measurement: ${item.values._measurement}, Value: ${item.values._value}, Tag: ${item.values.tag}`;
+                dataList.appendChild(listItem);
+            });
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
         });
-    })
-    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-    });
 }
 
-
+function displayDataPlus() {
+    const tmp = document.getElementById("txt-modelname").value;
+    // console.log(tmp);
+    displayData(tmp);
+}
